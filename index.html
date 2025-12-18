@@ -1,0 +1,954 @@
+# Query: 
+# ContextLines: 1
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PoSh • Our Timeline</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;600&display=swap');
+
+```
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: 'Montserrat', sans-serif;
+        background: #0a0a0a;
+        min-height: 100vh;
+        overflow-x: hidden;
+        position: relative;
+    }
+    
+    /* Animated particles background */
+    #particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+    }
+    
+    /* Architectural grid background */
+    body::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            linear-gradient(rgba(102,126,234,.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(102,126,234,.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+        animation: gridMove 20s linear infinite;
+        z-index: 1;
+    }
+    
+    @keyframes gridMove {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(50px, 50px); }
+    }
+    
+    .container {
+        position: relative;
+        z-index: 2;
+        background: rgba(15, 15, 25, 0.85);
+        border-radius: 30px;
+        padding: 50px;
+        max-width: 1100px;
+        width: 90%;
+        box-shadow: 0 30px 90px rgba(102, 126, 234, 0.3);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(102, 126, 234, 0.3);
+    }
+    
+    .header {
+        text-align: center;
+        margin-bottom: 50px;
+        cursor: pointer;
+        transition: transform 0.3s;
+    }
+    
+    .header:hover {
+        transform: scale(1.05);
+    }
+    
+    .logo {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 90px;
+        font-weight: 600;
+        background: linear-gradient(135deg, #667eea 0%, #f093fb 50%, #667eea 100%);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 10px;
+        letter-spacing: 12px;
+        animation: shimmer 3s linear infinite;
+    }
+    
+    @keyframes shimmer {
+        to { background-position: 200% center; }
+    }
+    
+    .subtitle {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.6);
+        letter-spacing: 4px;
+        text-transform: uppercase;
+    }
+    
+    .blueprint-divider {
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #667eea, #f093fb, #667eea, transparent);
+        margin: 30px 0;
+        position: relative;
+        animation: dividerGlow 2s ease-in-out infinite;
+    }
+    
+    @keyframes dividerGlow {
+        0%, 100% { opacity: 0.5; }
+        50% { opacity: 1; }
+    }
+    
+    .blueprint-divider::before,
+    .blueprint-divider::after {
+        content: '';
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: #667eea;
+        border-radius: 50%;
+        top: -4px;
+        box-shadow: 0 0 10px #667eea;
+    }
+    
+    .blueprint-divider::before { left: 0; }
+    .blueprint-divider::after { right: 0; }
+    
+    .countdown-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 30px;
+        margin-top: 30px;
+    }
+    
+    .countdown-section {
+        padding: 40px 30px;
+        background: rgba(102, 126, 234, 0.05);
+        border-radius: 20px;
+        border: 1px solid rgba(102, 126, 234, 0.3);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+        cursor: pointer;
+    }
+    
+    .countdown-section:hover {
+        transform: translateY(-10px);
+        border-color: #667eea;
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+        background: rgba(102, 126, 234, 0.1);
+    }
+    
+    .countdown-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s;
+    }
+    
+    .countdown-section:hover::before {
+        left: 100%;
+    }
+    
+    .section-icon {
+        font-size: 60px;
+        text-align: center;
+        margin-bottom: 20px;
+        animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    .section-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 28px;
+        color: #ffffff;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+    
+    .section-subtitle {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 12px;
+        margin-bottom: 25px;
+        font-style: italic;
+    }
+    
+    .timer {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-top: 20px;
+    }
+    
+    .time-unit {
+        text-align: center;
+        padding: 20px 10px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+        transition: all 0.3s;
+        border: 1px solid rgba(102, 126, 234, 0.2);
+    }
+    
+    .time-unit:hover {
+        transform: scale(1.1) rotate(2deg);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+        border-color: #667eea;
+    }
+    
+    .time-value {
+        font-size: 48px;
+        font-weight: 600;
+        background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: block;
+        font-family: 'Montserrat', sans-serif;
+        line-height: 1;
+    }
+    
+    .time-label {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.5);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-top: 8px;
+    }
+    
+    .memory-box {
+        margin-top: 40px;
+        padding: 40px;
+        background: rgba(102, 126, 234, 0.05);
+        border-radius: 20px;
+        border: 1px solid rgba(102, 126, 234, 0.3);
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s;
+    }
+    
+    .memory-box:hover {
+        border-color: #667eea;
+        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+    }
+    
+    .memory-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 32px;
+        color: #ffffff;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .memory-text {
+        color: rgba(255, 255, 255, 0.7);
+        line-height: 2;
+        font-size: 16px;
+        text-align: center;
+    }
+    
+    .interactive-heart {
+        text-align: center;
+        margin: 40px 0;
+        cursor: pointer;
+        user-select: none;
+    }
+    
+    .heart-emoji {
+        font-size: 80px;
+        display: inline-block;
+        animation: heartbeat 1.5s ease-in-out infinite;
+        filter: drop-shadow(0 0 20px rgba(240, 147, 251, 0.6));
+        transition: all 0.3s;
+    }
+    
+    .heart-emoji:hover {
+        transform: scale(1.3);
+        filter: drop-shadow(0 0 30px rgba(240, 147, 251, 1));
+    }
+    
+    .heart-emoji:active {
+        animation: heartPop 0.3s ease-out;
+    }
+    
+    @keyframes heartbeat {
+        0%, 100% { transform: scale(1); }
+        25% { transform: scale(1.1); }
+        50% { transform: scale(1); }
+    }
+    
+    @keyframes heartPop {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.5); }
+        100% { transform: scale(1); }
+    }
+    
+    .architectural-frame {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        border: 2px solid rgba(102, 126, 234, 0.5);
+        pointer-events: none;
+        animation: frameGlow 2s ease-in-out infinite;
+    }
+    
+    @keyframes frameGlow {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 1; }
+    }
+    
+    .frame-tl {
+        top: -10px;
+        left: -10px;
+        border-right: none;
+        border-bottom: none;
+    }
+    
+    .frame-tr {
+        top: -10px;
+        right: -10px;
+        border-left: none;
+        border-bottom: none;
+    }
+    
+    .frame-bl {
+        bottom: -10px;
+        left: -10px;
+        border-right: none;
+        border-top: none;
+    }
+    
+    .frame-br {
+        bottom: -10px;
+        right: -10px;
+        border-left: none;
+        border-top: none;
+    }
+    
+    .footer {
+        text-align: center;
+        margin-top: 50px;
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 10px;
+        letter-spacing: 3px;
+    }
+    
+    @media (max-width: 768px) {
+        .container {
+            padding: 30px 20px;
+        }
+        
+        .logo {
+            font-size: 56px;
+            letter-spacing: 6px;
+        }
+        
+        .countdown-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .timer {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .time-value {
+            font-size: 36px;
+        }
+        
+        .section-title {
+            font-size: 22px;
+        }
+        
+        .section-icon {
+            font-size: 48px;
+        }
+        
+        .heart-emoji {
+            font-size: 60px;
+        }
+    }
+    
+    .special-date {
+        display: inline-block;
+        padding: 6px 14px;
+        background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+        color: white;
+        border-radius: 20px;
+        font-weight: 600;
+        margin: 5px;
+        font-size: 13px;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    /* Timeline Section */
+    .timeline-section {
+        margin: 40px 0;
+    }
+    
+    .timeline-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    
+    .timeline-card {
+        background: rgba(102, 126, 234, 0.05);
+        border: 1px solid rgba(102, 126, 234, 0.3);
+        border-radius: 20px;
+        padding: 25px;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .timeline-card:hover {
+        transform: translateY(-5px);
+        border-color: #667eea;
+        box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        background: rgba(102, 126, 234, 0.1);
+    }
+    
+    .timeline-card.expanded {
+        grid-column: span 2;
+    }
+    
+    .card-icon {
+        font-size: 48px;
+        text-align: center;
+        margin-bottom: 15px;
+        animation: float 3s ease-in-out infinite;
+    }
+    
+    .card-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 22px;
+        color: #ffffff;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    
+    .card-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease;
+    }
+    
+    .timeline-card.expanded .card-content {
+        max-height: 500px;
+    }
+    
+    /* Photo Grid */
+    .photo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 10px;
+        margin-top: 15px;
+    }
+    
+    .photo-placeholder,
+    .photo-item {
+        aspect-ratio: 1;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        transition: all 0.3s;
+        overflow: hidden;
+    }
+    
+    .photo-placeholder:hover,
+    .photo-item:hover {
+        background: rgba(102, 126, 234, 0.3);
+        transform: scale(1.05);
+    }
+    
+    .photo-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    /* Milestones */
+    .milestone-item {
+        padding: 15px;
+        margin: 10px 0;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        border-left: 3px solid #667eea;
+    }
+    
+    .milestone-date {
+        font-size: 12px;
+        color: #667eea;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    
+    .milestone-text {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 14px;
+    }
+    
+    /* Music Button */
+    .music-btn {
+        background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+        border: none;
+        color: white;
+        padding: 15px 30px;
+        border-radius: 25px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+    
+    .music-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+    }
+    
+    .music-btn:active {
+        transform: scale(0.95);
+    }
+    
+    @media (max-width: 768px) {
+        .timeline-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .timeline-card.expanded {
+            grid-column: span 1;
+        }
+    }
+</style>
+```
+
+</head>
+<body>
+    <canvas id="particles"></canvas>
+
+```
+<div class="container">
+    <div class="architectural-frame frame-tl"></div>
+    <div class="architectural-frame frame-tr"></div>
+    <div class="architectural-frame frame-bl"></div>
+    <div class="architectural-frame frame-br"></div>
+    
+    <div class="header" onclick="createSparkles(event)">
+        <div class="logo">PoSh</div>
+        <div class="subtitle">Pooja & Shivam</div>
+    </div>
+    
+    <div class="blueprint-divider"></div>
+    
+    <div class="countdown-grid">
+        <!-- Birthday Countdown -->
+        <div class="countdown-section" onclick="pulseEffect(this)">
+            <div class="section-icon">🎂</div>
+            <div class="section-title">Birthday Vibes</div>
+            <div class="section-subtitle">Jan 5, 2026</div>
+            <div class="timer" id="birthdayTimer">
+                <div class="time-unit">
+                    <span class="time-value" id="bd-days">00</span>
+                    <span class="time-label">Days</span>
+                </div>
+                <div class="time-unit">
+                    <span class="time-value" id="bd-hours">00</span>
+                    <span class="time-label">Hours</span>
+                </div>
+                <div class="time-unit">
+                    <span class="time-value" id="bd-minutes">00</span>
+                    <span class="time-label">Minutes</span>
+                </div>
+                <div class="time-unit">
+                    <span class="time-value" id="bd-seconds">00</span>
+                    <span class="time-label">Seconds</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Anniversary Countdown -->
+        <div class="countdown-section" onclick="pulseEffect(this)">
+            <div class="section-icon">✨</div>
+            <div class="section-title">Our Story</div>
+            <div class="section-subtitle">Since Gopin Farm</div>
+            <div class="timer" id="anniversaryTimer">
+                <div class="time-unit">
+                    <span class="time-value" id="an-days">00</span>
+                    <span class="time-label">Days</span>
+                </div>
+                <div class="time-unit">
+                    <span class="time-value" id="an-hours">00</span>
+                    <span class="time-label">Hours</span>
+                </div>
+                <div class="time-unit">
+                    <span class="time-value" id="an-minutes">00</span>
+                    <span class="time-label">Minutes</span>
+                </div>
+                <div class="time-unit">
+                    <span class="time-value" id="an-seconds">00</span>
+                    <span class="time-label">Seconds</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="interactive-heart" onclick="explodeHearts(event)">
+        <div class="heart-emoji">💜</div>
+    </div>
+    
+    <!-- Interactive Timeline -->
+    <div class="timeline-section">
+        <div class="section-title" style="color: #ffffff; margin-bottom: 30px;">Our Journey 🗺️</div>
+        
+        <div class="timeline-grid">
+            <!-- Map Card -->
+            <div class="timeline-card" onclick="toggleCard(this)">
+                <div class="card-icon">📍</div>
+                <div class="card-title">Where We Met</div>
+                <div class="card-content">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3720.4!2d72.863!3d21.163!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be04f3b87d21d09%3A0x0!2sGopin%20Farm!5e0!3m2!1sen!2sin!4v1234567890" 
+                        width="100%" 
+                        height="250" 
+                        style="border:0; border-radius: 10px; margin-top: 15px;" 
+                        allowfullscreen="" 
+                        loading="lazy">
+                    </iframe>
+                    <div style="margin-top: 15px; font-size: 14px; color: rgba(255,255,255,0.7); text-align: center;">
+                        <strong>Gopin Farm</strong><br>
+                        Surat, Gujarat<br>
+                        January 12, 2025 💜
+                    </div>
+                </div>
+            </div>
+            
+        
+            
+            <!-- Special Moments Card -->
+            <div class="timeline-card" onclick="toggleCard(this)">
+                <div class="card-icon">💭</div>
+                <div class="card-title">Milestones</div>
+                <div class="card-content">
+                    <div class="milestone-item">
+                        <div class="milestone-date">Jan 12, 2025</div>
+                        <div class="milestone-text">First interaction 💜</div>
+                    </div>
+                    <div class="milestone-item">
+                        <div class="milestone-date">Jan 13, 2025</div>
+                        <div class="milestone-text">First date at Richie Rich ☕ </div>
+                    </div>
+                    <div class="milestone-item">
+                        <div class="milestone-date">March 1, 2025</div>
+                        <div class="milestone-text">First Official date at Serafina, NYC 🍕 </div>
+                    </div>
+                    <div class="milestone-item">
+                        <div class="milestone-date">May 2, 2025</div>
+                        <div class="milestone-text">First Official I LOVE YOU at burdett, NY 🍙  </div>
+                    </div>
+                    <div class="milestone-item">
+                        <div class="milestone-date">Oct 20, 2025</div>
+                        <div class="milestone-text">First international vacation at Dubai 🇦🇪  </div>
+                    </div>
+                    <div class="milestone-item">
+                        <div class="milestone-date">Today</div>
+                        <div class="milestone-text">Still counting moments ✨</div>
+                    </div>
+                
+                </div>
+            </div>
+            
+            <!-- Music Card -->
+            <div class="timeline-card" onclick="toggleCard(this)">
+                <div class="card-icon">🎵</div>
+                <div class="card-title">Our Vibe</div>
+                <div class="card-content">
+                    <div style="text-align: center; padding: 20px;">
+                        <button class="music-btn" onclick="event.stopPropagation(); openSong()">
+                            ▶️ Play Our Song
+                    </button>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="memory-box">
+        <div class="memory-title">Building Us 💙</div>
+        
+    </div>
+    
+    <div class="footer">
+        BUILT WITH LOVE • POOJA for SHIVAM <3
+    </div>
+</div>
+
+<script>
+    // Particle System
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    let particles = [];
+    
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2 + 0.5;
+            this.speedX = Math.random() * 0.5 - 0.25;
+            this.speedY = Math.random() * 0.5 - 0.25;
+            this.opacity = Math.random() * 0.5 + 0.2;
+        }
+        
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            
+            if (this.x > canvas.width) this.x = 0;
+            if (this.x < 0) this.x = canvas.width;
+            if (this.y > canvas.height) this.y = 0;
+            if (this.y < 0) this.y = canvas.height;
+        }
+        
+        draw() {
+            ctx.fillStyle = `rgba(102, 126, 234, ${this.opacity})`;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+    
+    function initParticles() {
+        for (let i = 0; i < 100; i++) {
+            particles.push(new Particle());
+        }
+    }
+    
+    function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(particle => {
+            particle.update();
+            particle.draw();
+        });
+        requestAnimationFrame(animateParticles);
+    }
+    
+    initParticles();
+    animateParticles();
+    
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+    
+    // Countdown Timers
+    const birthdayDate = new Date(2026, 0, 5, 0, 0, 0).getTime();
+    const firstMeetingDate = new Date('2025-01-12T00:00:00').getTime();
+    
+    function updateCountdowns() {
+        if (!document.getElementById('bd-days')) return;
+        const now = new Date().getTime();
+        
+        // Birthday countdown
+        const bdDistance = birthdayDate - now;
+        
+        const bdDays = Math.floor(bdDistance / (1000 * 60 * 60 * 24));
+        const bdHours = Math.floor((bdDistance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const bdMinutes = Math.floor((bdDistance % (1000 * 60 * 60)) / (1000 * 60));
+        const bdSeconds = Math.floor((bdDistance % (1000 * 60)) / 1000);
+        
+        document.getElementById('bd-days').textContent = bdDays.toString().padStart(2, '0');
+        document.getElementById('bd-hours').textContent = bdHours.toString().padStart(2, '0');
+        document.getElementById('bd-minutes').textContent = bdMinutes.toString().padStart(2, '0');
+        document.getElementById('bd-seconds').textContent = bdSeconds.toString().padStart(2, '0');
+        
+        // Anniversary countdown
+        const anDistance = now - firstMeetingDate;
+        
+        const anDays = Math.floor(anDistance / (1000 * 60 * 60 * 24));
+        const anHours = Math.floor((anDistance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const anMinutes = Math.floor((anDistance % (1000 * 60 * 60)) / (1000 * 60));
+        const anSeconds = Math.floor((anDistance % (1000 * 60)) / 1000);
+        
+        document.getElementById('an-days').textContent = anDays.toString().padStart(2, '0');
+        document.getElementById('an-hours').textContent = anHours.toString().padStart(2, '0');
+        document.getElementById('an-minutes').textContent = anMinutes.toString().padStart(2, '0');
+        document.getElementById('an-seconds').textContent = anSeconds.toString().padStart(2, '0');
+        
+        // Birthday arrived
+        if (bdDistance < 0) {
+            document.querySelector('.countdown-section:first-child .section-title').textContent = '🎉 Happy Birthday! 🎉';
+            document.querySelector('.countdown-section:first-child .section-subtitle').textContent = 'Celebrating You!';
+        }
+    }
+    
+    
+    
+    // Interactive Functions
+    function pulseEffect(element) {
+        element.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            element.style.transform = '';
+        }, 200);
+    }
+    
+    function createSparkles(event) {
+        for (let i = 0; i < 20; i++) {
+            const sparkle = document.createElement('div');
+            sparkle.textContent = '✨';
+            sparkle.style.position = 'fixed';
+            sparkle.style.left = event.clientX + 'px';
+            sparkle.style.top = event.clientY + 'px';
+            sparkle.style.fontSize = Math.random() * 20 + 10 + 'px';
+            sparkle.style.pointerEvents = 'none';
+            sparkle.style.zIndex = '9999';
+            sparkle.style.animation = 'sparkleFloat 1s ease-out forwards';
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes sparkleFloat {
+                    to {
+                        transform: translate(${Math.random() * 200 - 100}px, ${Math.random() * 200 - 100}px);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            document.body.appendChild(sparkle);
+            
+            setTimeout(() => {
+                sparkle.remove();
+                style.remove();
+            }, 1000);
+        }
+    }
+    
+    function explodeHearts(event) {
+        const hearts = ['💜', '💙', '💖', '💗', '💕'];
+        for (let i = 0; i < 15; i++) {
+            const heart = document.createElement('div');
+            heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+            heart.style.position = 'fixed';
+            heart.style.left = event.clientX + 'px';
+            heart.style.top = event.clientY + 'px';
+            heart.style.fontSize = Math.random() * 30 + 20 + 'px';
+            heart.style.pointerEvents = 'none';
+            heart.style.zIndex = '9999';
+            
+            const angle = (Math.PI * 2 * i) / 15;
+            const velocity = 150 + Math.random() * 100;
+            const vx = Math.cos(angle) * velocity;
+            const vy = Math.sin(angle) * velocity;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes heartExplode${i} {
+                    to {
+                        transform: translate(${vx}px, ${vy}px) rotate(360deg);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            heart.style.animation = `heartExplode${i} 1.5s ease-out forwards`;
+            document.body.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+                style.remove();
+            }, 1500);
+        }
+    }
+    
+    // Timeline Card Toggle
+    function toggleCard(card) {
+        const wasExpanded = card.classList.contains('expanded');
+        
+        // Close all cards
+        document.querySelectorAll('.timeline-card').forEach(c => {
+            c.classList.remove('expanded');
+        });
+        
+        // Open clicked card if it wasn't already open
+        if (!wasExpanded) {
+            card.classList.add('expanded');
+        }
+    }
+    
+    // Photo Upload Handler
+    function handlePhotos(event) {
+        const files = event.target.files;
+        const photoGrid = document.getElementById('photoGrid');
+        
+        Array.from(files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const photoItem = document.createElement('div');
+                photoItem.className = 'photo-item';
+                photoItem.innerHTML = `<img src="${e.target.result}" alt="Memory">`;
+                
+                // Insert before the placeholder
+                const placeholder = photoGrid.querySelector('.photo-placeholder');
+                photoGrid.insertBefore(photoItem, placeholder);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+    
+    // Music Toggle
+    function openSong() {
+    window.open(
+        "https://www.youtube.com/watch?v=MeCHQb9nKhg",
+        "_blank",
+        "noopener,noreferrer"
+        );
+    }
+    window.addEventListener('load', () => {
+  updateCountdowns();
+  setInterval(updateCountdowns, 1000);
+});
+
+</script>
+```
+
+</body>
+</html>
